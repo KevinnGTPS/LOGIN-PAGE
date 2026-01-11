@@ -60,31 +60,8 @@ app.all('/player/growid/login/validate', (req, res) => {
         `{"status":"success","message":"Account Validated.","token":"${token}","url":"","accountType":"growtopia", "accountAge": 2}`,
     );
 });
-app.all('/player/growid/checktoken', (req, res) => { 
-    const { refreshToken } = req.body;
 
-    try {
-        const decoded = Buffer.from(refreshToken, 'base64').toString('utf-8');
-        const modifiedToken = decoded.replace(/has_reg=1/g, 'has_reg=0');
-
-        if (!decoded.includes('growId=') || !decoded.includes('password=')) {
-            return res.render(__dirname + '/public/html/dashboard.ejs');
-        }
-
-        const newRefreshToken = Buffer.from(modifiedToken).toString('base64');
-
-        // ✅ Redirect ke path tujuan
-        return res.redirect(
-            `/player/growid/validate/checktoken?token=${encodeURIComponent(newRefreshToken)}`
-        );
-
-    } catch (error) {
-        console.log("Error processing token, redirecting to login dashboard:", error.message);
-        return res.render(__dirname + '/public/html/dashboard.ejs');
-    }
-});
-
-app.all('/player/growid/validate/checktoken', (req, res) => {
+app.all('/player/growid/checktoken', (req, res) => {
     const { refreshToken } = req.body;
     try {
         const decoded = Buffer.from(refreshToken, 'base64').toString('utf-8');
